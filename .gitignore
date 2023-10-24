@@ -1,0 +1,9 @@
+# Directories
+.vscode/
+.idea
+build/
+node_modules/
+
+# Environment variables
+.env
+

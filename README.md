@@ -1,1 +1,1 @@
-# peerprep_chat_service
+# PeerPrep Chat Service
