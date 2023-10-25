@@ -12,3 +12,25 @@ services:
     ports:
       # local->container
       - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
+    depends_on:
+        - chat_service_redis
+    networks:
+        - peerprep
+# Redis - Chat Service
+  chat_service_redis:
+    container_name: chat_service_redis
+    image: redis:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - ${REDIS_LOCAL_PORT}:${REDIS_DOCKER_PORT}
+    networks:
+      - peerprep
+
+networks:
+    peerprep:
+        external: true
+
+
+
