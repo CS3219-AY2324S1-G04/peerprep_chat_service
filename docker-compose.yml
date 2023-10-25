@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  # Server - Chat Service
+  chat_service_api:
+    container_name: chat_service_api
+    image: peerprep_chat_service_api
+    build: ./
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      # local->container
+      - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
