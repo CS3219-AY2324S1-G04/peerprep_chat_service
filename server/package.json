@@ -5,12 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start:dev": "nodemon",
-    "start": "npm run build && node ./build/server.js",
-    "build": "rimraf ./build && tsc",
-    "test": "jest ./src",
-    "format": "prettier --config .prettierrc --write 'src/**/*.ts'",
-    "lint": "eslint . --ext .ts",
-    "fix": "npm run format && eslint . --ext .ts --fix"
+    "start": "npm run build && node build/server.js",
+    "build": "rimraf build && tsc",
+    "test": "jest src",
+    "format": "prettier --config .prettierrc --write 'server/src/**/*.ts'",
+    "lint": "eslint .. --ext .ts",
+    "fix": "npm run format && eslint .. --ext .ts --fix"
   },
   "author": "",
   "license": "ISC",

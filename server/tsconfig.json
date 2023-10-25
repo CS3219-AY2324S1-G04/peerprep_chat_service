@@ -10,5 +10,7 @@
     "skipLibCheck": true,
     "noImplicitOverride": true
   },
-  "exclude": ["./src/**/__tests__"]
+  "exclude": [
+    "./server/src/**/__tests__"
+  ]
 }
