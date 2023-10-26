@@ -1,3 +1,7 @@
+/**
+ * @file Manages the configuration settings for Socket IO API.
+ * @author Irving de Boer
+ */
 import express, { Application } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';

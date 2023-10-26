@@ -1,3 +1,7 @@
+/**
+ * @file Defines the constants within question service API.
+ * @author Irving de Boer
+ */
 import { Server } from 'socket.io';
 
 export class Room {
