@@ -19,7 +19,7 @@ export class Room {
       socket.join(roomId);
 
       console.log(`User ${socket.id} joined room ${roomId}`);
-      socket.on('message', (message: string) => {
+      socket.on('sendMessage', (message: string) => {
         this._sendMessage(socket, roomId, message);
       });
     });
@@ -27,6 +27,6 @@ export class Room {
 
   private _sendMessage(socket: any, roomId: string | string[], message: string) {
     console.log(`User ${socket.id} sent message ${message} to room ${roomId}`);
-    socket.to(roomId).emit('sendMessage', message);
+    socket.to(roomId).emit('receiveMessage', message);
   }
 }
