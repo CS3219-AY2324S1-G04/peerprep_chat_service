@@ -19,10 +19,8 @@ export class Room {
       const userId = socket.handshake.query.userId!;
 
       this._joinedRoom(socket, roomId, userId);
-
-      this._leaveRoom(socket, roomId, userId);
-
       this._sendMessage(socket, roomId, userId);
+      this._leaveRoom(socket, roomId, userId);
     });
   }
 
@@ -31,21 +29,20 @@ export class Room {
     console.log(`User ${userId} joined room ${roomId}`);
     const joinedRoomMessage = `User ${userId} joined the chat`;
     socket.join(roomId);
-    socket.to(roomId).emit('joinedRoom', joinedRoomMessage);
+    socket.to(roomId).emit('joinRoom', joinedRoomMessage);
   }
 
   private _leaveRoom(socket: any, roomId: string | string[], userId: string) {
-    socket.on('disconnect', (socket: any) => {
-
+    socket.on('disconnect', () => {
       const disconnectedMessage = `User ${userId} left the chat`;
       console.log(`User ${userId} disconnected`);
       socket.to(roomId).emit('leftRoom', disconnectedMessage);
     });
   }
 
-  private _sendMessage(socket: any, roomId: string | string[], message: string) {
-    console.log(`User ${socket.id} sent message ${message} to room ${roomId}`);
+  private _sendMessage(socket: any, roomId: string | string[], userId: string) {
     socket.on('sendMessage', (message: string) => {
+      console.log(`User ${userId} sent message ${message} to room ${roomId}`);
       socket.to(roomId).emit('receiveMessage', message);
     });
   }
