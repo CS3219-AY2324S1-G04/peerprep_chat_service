@@ -3,7 +3,6 @@
  * @author Irving de Boer
  */
 import { Server } from 'socket.io';
-import { MessageController } from './chat.mq';
 
 export class Room {
 
