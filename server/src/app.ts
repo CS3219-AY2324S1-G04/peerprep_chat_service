@@ -39,6 +39,8 @@ class App {
       res.send('PeerPrep Chat Service');
     });
 
+    this.app.use('/chat-service')
+
     new Room(this.io);
   }
 
