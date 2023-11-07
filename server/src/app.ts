@@ -9,6 +9,7 @@ import { Room } from './controller/chat.room';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-streams-adapter';
 import * as dotenv from 'dotenv';
+import { MessageController } from './controller/chat.mq';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ class App {
   public app: Application;
   public server;
   public io;
+  private _messageQueueController;
   private _redisClient = createClient({ url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_DOCKER_PORT}` });
 
   public constructor() {
@@ -28,6 +30,7 @@ class App {
         origin: '*',
       }
     })
+    this._messageQueueController = new MessageController();
     this._setController();
   }
 
