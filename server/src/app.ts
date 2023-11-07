@@ -30,7 +30,7 @@ class App {
         origin: '*',
       }
     })
-    this._messageQueueController = new MessageController();
+    this._messageQueueController = new MessageController(this._redisClient);
     this._setController();
   }
 
@@ -41,7 +41,7 @@ class App {
 
     this.app.use('/chat-service')
 
-    new Room(this.io);
+    new Room(this.io, this._redisClient);
   }
 
   private async _setRedisConnect() {

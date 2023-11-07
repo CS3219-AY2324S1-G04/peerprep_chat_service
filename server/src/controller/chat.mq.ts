@@ -1,12 +1,14 @@
 import RoomServiceMqConsumer from '../message_queue/chat.mq';
 import * as dotenv from 'dotenv';
+import { RedisDatabase } from '../database/chat.database';
 
 dotenv.config();
 
 export class MessageController {
   private _consumer: any;
+  private _redisDatabase: any;
 
-  public constructor() {
+  public constructor(client: any) {
     this._consumer = new RoomServiceMqConsumer({
         password: process.env.MQ_PASSWORD!,
         user: process.env.MQ_USER!,
@@ -19,6 +21,7 @@ export class MessageController {
       }
     );
 
+    this._redisDatabase = new RedisDatabase(client);
     this._setUpConsumer();
     this._getMessages();
   }
@@ -30,6 +33,19 @@ export class MessageController {
   private async _getMessages() {
     await this._consumer.consume( async (data: any) => {
       console.log(`Received: ${JSON.stringify(data)}`);
+      await this._handleMessage(data);
     });
+  }
+
+  private async _handleMessage(data: any) {
+    try {
+      if (data.eventType === 'create') {
+        await this._redisDatabase.createRoom(data.room.roomId);
+      } else if (data.eventType === 'delete') {
+        await this._redisDatabase.deleteRoom(data.room.roomId);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 }

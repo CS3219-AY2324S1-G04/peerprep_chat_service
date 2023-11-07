@@ -3,13 +3,18 @@
  * @author Irving de Boer
  */
 import { Server } from 'socket.io';
+import { RedisDatabase } from '../database/chat.database';
 
 export class Room {
 
   public io: Server;
+  private _client: any;
+  private _database: any;
 
-  public constructor(io: Server) {
+  public constructor(io: Server, client: any) {
     this.io = io;
+    this._client = client;
+    this._database = new RedisDatabase(this._client);
     this._listenOnRoom();
   }
 
@@ -63,11 +68,13 @@ export class Room {
         timestamp: incomingMessage.timestamp,
       }
       socket.to(roomId).emit('receiveMessage', outgoingMessage);
+
+      this._database.addMessage(<string>roomId, outgoingMessage);
     });
   }
 }
 
-interface MessagePayload {
+export interface MessagePayload {
   userId: string;
   message: string;
   timestamp: Date;
