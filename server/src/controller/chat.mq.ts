@@ -1,17 +1,20 @@
 import RoomServiceMqConsumer from '../message_queue/chat.mq';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 export class MessageController {
   private _consumer: any;
 
   public constructor() {
     this._consumer = new RoomServiceMqConsumer({
-        password: 'P@ssword123',
-        user: 'user',
+        password: process.env.MQ_PASSWORD!,
+        user: process.env.MQ_USER!,
         host: 'room_service_mq',
         port: 5672,
         vhost: '', // Vhost is a non-empty string in production
         shouldUseTls: false, // TLS will be used during production
-        exchangeName: 'room-events',
+        exchangeName: process.env.MQ_EXCHANGE_NAME!,
         queueName: 'chat-service-room-event-queue',
       }
     );

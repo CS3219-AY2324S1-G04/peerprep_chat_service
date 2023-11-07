@@ -43,6 +43,12 @@ These environment variables are used by both the API and Redis images.
 * `EXPRESS_LOCAL_PORT` - Local Port for REST API.
 * `USER_SERVICE_HOST` - Hostname of User Service.
 
+### RabbitMQ
+
+* `MQ_USER` - The username for the RabbitMQ Server.
+* `MQ_PASSWRD` - The password for the RabbitMQ Server.
+* `MQ_EXCHANGE_NAME` - The name of the RabbitMQ exchange queue.
+
 ## Chat Server API
 
 The server uses Socket.IO to communicate with clients. The Socket.IO library can be found [here](https://socket.io/).
@@ -69,29 +75,30 @@ const socket = io("http://localhost:3000", {
 });
 ```
 
+
+### Message Payload
+The message payload structure is as seen below:
+
+```json
+{
+  "userId": "user-id",
+  "message": "Hello World!",
+  "timestamp": "2021-09-12T16:00:00.000Z"
+}
+```
+
 ### Sending Messages
 
 The client can send messages to the server using the `sendMessage` event. The client should pass the message as a
-string.
-The server will then broadcast the message to all clients in the room. The client can send messages using the following
-code:
+message payload of the structure above. 
 
-```typescript
-socket.emit("sendMessage", "Hello World!");
-```
+
+The server will then emit the message to all receiving clients in the room.
 
 ### Receiving Messages
 
-The client can receive messages from the server using the `receiveMessage` event. The server will broadcast the message
-to
-all clients in the room. The client can receive messages using the following code:
+The client can receive messages from the server using the `receiveMessage` event. The message is received in the same message payload structure as seen above.
 
-```typescript
-socket.on("receiveMessage", (message: string) => {
-  // display message
-  console.log(message);
-});
-```
 
 
 
