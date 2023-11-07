@@ -3,6 +3,7 @@
  * @author Irving de Boer
  */
 import { Server } from 'socket.io';
+import { MessageController } from './chat.mq';
 
 export class Room {
 
@@ -29,23 +30,46 @@ export class Room {
     console.log(`User ${userId} joined room ${roomId}`);
     const joinedRoomMessage = `User ${userId} joined the chat`;
     socket.join(roomId);
-    socket.to(roomId).emit('joinRoom', joinedRoomMessage);
+
+    const joinedRoomPayload: MessagePayload = {
+      userId: userId,
+      message: joinedRoomMessage,
+      timestamp: new Date(),
+    }
+
+    socket.to(roomId).emit('joinRoom', joinedRoomPayload);
   }
 
   private _leaveRoom(socket: any, roomId: string | string[], userId: string) {
     socket.on('disconnect', () => {
       const disconnectedMessage = `User ${userId} left the chat`;
       console.log(`User ${userId} disconnected`);
-      socket.to(roomId).emit('leftRoom', disconnectedMessage);
+
+      const disconnectedPayload: MessagePayload = {
+        userId: userId,
+        message: disconnectedMessage,
+        timestamp: new Date(),
+      }
+      socket.to(roomId).emit('leftRoom', disconnectedPayload);
     });
   }
 
   private _sendMessage(socket: any, roomId: string | string[], userId: string) {
-    socket.on('sendMessage', (message: string) => {
-      console.log(`User ${userId} sent message ${message} to room ${roomId}`);
-      socket.to(roomId).emit('receiveMessage', message);
+    socket.on('sendMessage', (incomingMessage: MessagePayload) => {
+      console.log(`User ${userId} sent message ${incomingMessage.message} to room ${roomId}`);
+
+      const outgoingMessage: MessagePayload = {
+        userId: userId,
+        message: incomingMessage.message,
+        timestamp: incomingMessage.timestamp,
+      }
+      socket.to(roomId).emit('receiveMessage', outgoingMessage);
     });
   }
+}
 
-
+interface MessagePayload {
+  userId: string;
+  message: string;
+  timestamp: Date;
 }
