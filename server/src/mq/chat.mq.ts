@@ -1,5 +1,6 @@
 /**
- * @file Consumes room events from the MQ and calls the callback {@link onMessage}.
+ * @file Consumes room events from the MQ and calls the callback
+ * {@link onMessage}.
  */
 import amqp from 'amqplib';
 
