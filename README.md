@@ -43,6 +43,15 @@ These environment variables are used by both the API and Redis images.
 * `EXPRESS_LOCAL_PORT` - Local Port for REST API.
 * `USER_SERVICE_HOST` - Hostname of User Service.
 
+### RabbitMQ
+
+* `MQ_HOST` - Hostname of RabbitMQ Server.
+* `MQ_PORT` - Local Port for RabbitMQ Server.
+* `MQ_EXCHANGE_NAME` - Name of the RabbitMQ Exchange.
+* `MQ_USER` - Username for RabbitMQ Server.
+* `MQ_PASSWORD` - Password for RabbitMQ Server.
+* `MQ_VHOST` - Virtual Host for RabbitMQ Server. Set to '' for development.
+
 ## Chat Server API
 
 The server uses Socket.IO to communicate with clients. The Socket.IO library can be found [here](https://socket.io/).
