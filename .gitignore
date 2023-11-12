@@ -1,5 +1,6 @@
 # Directories
 .vscode/
 .idea/
-
-
+build/
+docker_build
+node_modules/
