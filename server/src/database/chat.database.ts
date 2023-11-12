@@ -11,7 +11,8 @@ export class ChatDatabase {
 
   public async checkValidUser(roomId: string, userId: string) {
     const roomKey = `room:${roomId}`;
-    return await this._redisClient.sIsMember(roomKey, userId);
+    const users = await this._redisClient.sMembers(roomKey);
+    return users.includes(userId);
   }
 
   public async addUsers(roomId: string, userIds: string[]) {
@@ -24,7 +25,7 @@ export class ChatDatabase {
     return await this._redisClient.del(roomKey);
   }
 
-  public async removeUser(roomId: string, userIds: string[]) {
+  public async removeUsers(roomId: string, userIds: string[]) {
     const roomKey = `room:${roomId}`;
     return await this._redisClient.sRem(roomKey, userIds);
   }

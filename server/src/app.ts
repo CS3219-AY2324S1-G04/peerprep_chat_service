@@ -37,8 +37,8 @@ class App {
       },
       path: '/chat-service',
     });
-    this._setController();
     this._redisDatabase = new ChatDatabase(this._redisClient);
+    this._setController();
   }
 
   private async _setController() {
@@ -72,26 +72,26 @@ class App {
 
     await consumer.consume(async (data: RoomEvent) => {
       console.log(`Received: ${JSON.stringify(data)}`);
-      this._handleRoomEvent(data);
+      await this._handleRoomEvent(data);
     });
   }
 
-  private _handleRoomEvent(data: RoomEvent) {
+  private async _handleRoomEvent(data: RoomEvent) {
     const roomId = data.room.roomId;
     const userIds = data.room.userIds.map(String);
 
     switch (data.eventType) {
       case 'create':
         console.log('create');
-        this._redisDatabase.addUsers(roomId, userIds);
+        await this._redisDatabase.addUsers(roomId, userIds);
         break;
       case 'delete':
         console.log('delete');
-        this._redisDatabase.deleteRoom(roomId);
+        await this._redisDatabase.deleteRoom(roomId);
         break;
       case 'remove-user':
         console.log('remove-user');
-        this._redisDatabase.removeUser(roomId, userIds);
+        await this._redisDatabase.removeUsers(roomId, userIds);
         break;
     }
   }

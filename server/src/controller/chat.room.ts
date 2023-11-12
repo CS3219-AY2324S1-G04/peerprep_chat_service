@@ -18,7 +18,7 @@ export class Room {
   }
   private _listenOnRoom() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.io.on('connection', (socket: any) => {
+    this.io.on('connection', async (socket: any) => {
       const connectionQuery: ConnectionQuery = socket.handshake.query;
 
       const roomId = connectionQuery.roomId!;
@@ -30,14 +30,14 @@ export class Room {
         socket.disconnect();
       }
 
-      if (!this.database.checkValidUser(roomId, userId)) {
+      if ((await this.database.checkValidUser(roomId, userId)) === false) {
         console.log(`User ${userName} is not a valid user for room ${roomId}`);
         socket.disconnect();
+      } else {
+        this._joinedRoom(socket, roomId, userName);
+        this._sendMessage(socket, roomId, userName);
+        this._leaveRoom(socket, roomId, userName);
       }
-
-      this._joinedRoom(socket, roomId, userName);
-      this._sendMessage(socket, roomId, userName);
-      this._leaveRoom(socket, roomId, userName);
     });
   }
 
