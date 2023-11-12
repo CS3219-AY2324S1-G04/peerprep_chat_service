@@ -1,3 +1,6 @@
+/**
+ * @file Defines the constants within chat service API.
+ */
 import * as dotenv from 'dotenv';
 
 dotenv.config();

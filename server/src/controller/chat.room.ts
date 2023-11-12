@@ -4,18 +4,21 @@
  */
 import { Server } from 'socket.io';
 
+import { ChatDatabase } from '../database/chat.database';
 import { ConnectionQuery, MessagePayload } from '../interfaces/chat.interfaces';
 
 export class Room {
   public io: Server;
+  public database: ChatDatabase;
 
-  public constructor(io: Server) {
+  public constructor(io: Server, database: ChatDatabase) {
     this.io = io;
+    this.database = database;
     this._listenOnRoom();
   }
   private _listenOnRoom() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.io.on('connection', (socket: any) => {
+    this.io.on('connection', async (socket: any) => {
       const connectionQuery: ConnectionQuery = socket.handshake.query;
 
       const roomId = connectionQuery.roomId!;
@@ -27,9 +30,14 @@ export class Room {
         socket.disconnect();
       }
 
-      this._joinedRoom(socket, roomId, userName);
-      this._sendMessage(socket, roomId, userName);
-      this._leaveRoom(socket, roomId, userName);
+      if ((await this.database.checkValidUser(roomId, userId)) === false) {
+        console.log(`User ${userName} is not a valid user for room ${roomId}`);
+        socket.disconnect();
+      } else {
+        this._joinedRoom(socket, roomId, userName);
+        this._sendMessage(socket, roomId, userName);
+        this._leaveRoom(socket, roomId, userName);
+      }
     });
   }
 
