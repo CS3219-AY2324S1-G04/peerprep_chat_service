@@ -10,6 +10,7 @@ import { createClient } from 'redis';
 import { Server } from 'socket.io';
 
 import { Room } from './controller/chat.room';
+import { ChatDatabase } from './database/chat.database';
 import { RoomEvent } from './interfaces/chat.interfaces';
 import RoomServiceMqConsumer from './mq/chat.mq';
 
@@ -22,11 +23,13 @@ class App {
   private _redisClient = createClient({
     url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_DOCKER_PORT}`,
   });
+  private _redisDatabase;
 
   public constructor() {
     this.app = express();
     this.server = createServer(this.app);
     this._setRedisConnect();
+
     this.io = new Server(this.server, {
       adapter: createAdapter(this._redisClient),
       cors: {
@@ -35,6 +38,7 @@ class App {
       path: '/chat-service',
     });
     this._setController();
+    this._redisDatabase = new ChatDatabase(this._redisClient);
   }
 
   private async _setController() {
@@ -42,7 +46,7 @@ class App {
       res.send('PeerPrep Chat Service');
     });
 
-    new Room(this.io);
+    new Room(this.io, this._redisDatabase);
 
     await this._consumeMessages();
   }
@@ -68,7 +72,28 @@ class App {
 
     await consumer.consume(async (data: RoomEvent) => {
       console.log(`Received: ${JSON.stringify(data)}`);
+      this._handleRoomEvent(data);
     });
+  }
+
+  private _handleRoomEvent(data: RoomEvent) {
+    const roomId = data.room.roomId;
+    const userIds = data.room.userIds.map(String);
+
+    switch (data.eventType) {
+      case 'create':
+        console.log('create');
+        this._redisDatabase.addUsers(roomId, userIds);
+        break;
+      case 'delete':
+        console.log('delete');
+        this._redisDatabase.deleteRoom(roomId);
+        break;
+      case 'remove-user':
+        console.log('remove-user');
+        this._redisDatabase.removeUser(roomId, userIds);
+        break;
+    }
   }
 }
 

@@ -4,13 +4,16 @@
  */
 import { Server } from 'socket.io';
 
+import { ChatDatabase } from '../database/chat.database';
 import { ConnectionQuery, MessagePayload } from '../interfaces/chat.interfaces';
 
 export class Room {
   public io: Server;
+  public database: ChatDatabase;
 
-  public constructor(io: Server) {
+  public constructor(io: Server, database: ChatDatabase) {
     this.io = io;
+    this.database = database;
     this._listenOnRoom();
   }
   private _listenOnRoom() {
@@ -24,6 +27,11 @@ export class Room {
 
       if (!roomId || !userId || !userName) {
         console.log('Missing connection query parameters');
+        socket.disconnect();
+      }
+
+      if (!this.database.checkValidUser(roomId, userId)) {
+        console.log(`User ${userName} is not a valid user for room ${roomId}`);
         socket.disconnect();
       }
 
