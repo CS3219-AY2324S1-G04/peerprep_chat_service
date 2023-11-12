@@ -54,7 +54,7 @@ npm install socket.io-client @types/socket.io-client
 
 ### Connecting to the Server
 
-The server is hosted on `localhost:3000` by default. By default, the client should connect to the server using websocket
+The server is hosted on `localhost:9000` by default. By default, the client should connect to the server using websocket
 connection. The client passes the room ID as a query parameter when connecting to the server. The room ID is needed to
 identify the room that the client is connecting to and its intended recipient. The client can connect to the server
 using the following code:
@@ -62,9 +62,11 @@ using the following code:
 ```typescript
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3000", {
+const socket = io("http://localhost:9005", {
   query: {
     roomId: "room-id",
+    userId: "user-id",
+    userName: "user-name",
   },
 });
 ```
@@ -87,9 +89,10 @@ to
 all clients in the room. The client can receive messages using the following code:
 
 ```typescript
-socket.on("receiveMessage", (message: string) => {
-  // display message
-  console.log(message);
+socket.on("receiveMessage", (messagePayload: {   message: string, userName: string; }) => {
+  // display message and username
+  console.log(messagePayload.message);
+  console.log(messagePayload.userName);
 });
 ```
 
