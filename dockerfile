@@ -1,18 +1,11 @@
-FROM node:hydrogen
+FROM node:lts-hydrogen
 
-RUN apt-get update
-RUN apt-get install unzip -y
+COPY ./build /peerprep_chat_service_api/
+COPY package.json /peerprep_chat_service_api/
+COPY package-lock.json /peerprep_chat_service_api/
 
-RUN mkdir -p /usr/src/app
+WORKDIR /peerprep_chat_service_api
 
-WORKDIR /usr/src/app
+RUN npm install --omit=dev -y
 
-COPY package*.json /usr/src/app/
-
-RUN npm install
-
-COPY .. .
-
-EXPOSE 4000
-
-CMD [ "npm", "start", "dev"]
+CMD node main.js
