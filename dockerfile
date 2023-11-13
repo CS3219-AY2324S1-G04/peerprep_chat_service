@@ -8,4 +8,4 @@ WORKDIR /peerprep_chat_service_api
 
 RUN npm install --omit=dev -y
 
-CMD node main.js
+CMD node server.js
