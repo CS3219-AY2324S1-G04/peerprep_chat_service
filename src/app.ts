@@ -48,7 +48,7 @@ class App {
     this.io = new Server(this.server, {
       adapter: createAdapter(this._redisClient),
       cors: {
-        origin: '*',
+        origin: new RegExp('http://localhost:[0-9]+'),
       },
       path: '/chat-service',
     });
