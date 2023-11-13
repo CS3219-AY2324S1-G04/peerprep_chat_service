@@ -4,9 +4,9 @@ metadata:
   name: chat-service-message-broker-client-config-map
   namespace: peerprep
 data:
-  redis-username: chat-service
-  redis-host: redis-12168.c295.ap-southeast-1-1.ec2.cloud.redislabs.com
-  redis-port: '12168'
+  redis-username: default
+  redis-host: redis-15784.c1.asia-northeast1-1.gce.cloud.redislabs.com
+  redis-port: '15784'
 
   # This value should be "true" for actual deployment. The reason why it is
   # "false" is due to free tier database limitations.
