@@ -27,6 +27,10 @@ The `docker-compose.yml` file starts 2 Docker containers.
 3. Run `npm install` to install necessary dependencies.
 4. Create and start Docker containers by running command `docker compose up --build -d`.
 
+## Architecture
+
+![](./images/architecture.jpg)
+
 ## Environment Variables
 
 ### Common
