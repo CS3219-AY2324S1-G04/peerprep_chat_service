@@ -4,7 +4,7 @@ Handles the storing retrieving, updating and deleting of questions.
 
 The `docker-compose.yml` file starts 2 Docker containers.
 
-- `chat_service_redis` - NoSQL Database for storing question repository.
+- `chat_service_message_broker` - NoSQL Database for storing question repository.
 - `chat_service_api` - REST API for interacting with the database.
 
 ## Table of Contents
@@ -26,6 +26,10 @@ The `docker-compose.yml` file starts 2 Docker containers.
    configs.
 3. Run `npm install` to install necessary dependencies.
 4. Create and start Docker containers by running command `docker compose up --build -d`.
+
+## Architecture
+
+![](./images/architecture-1.jpg)
 
 ## Environment Variables
 
@@ -104,6 +108,3 @@ socket.on("receiveMessage", (messagePayload: {   message: string, userName: stri
   console.log(messagePayload.userName);
 });
 ```
-
-
-

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chat-service-room-service-mq-client-config-map
+  namespace: peerprep
+data:
+  room-service-mq-user: lntyztej
+  room-service-mq-host: octopus.rmq3.cloudamqp.com
+  room-service-mq-port: '5671'
+  room-service-mq-vhost: lntyztej
+  room-service-mq-should-use-tls: 'true'
+  room-service-mq-exchange-name: room-events
+  room-service-mq-queue-name: chat-service-room-event-queue
