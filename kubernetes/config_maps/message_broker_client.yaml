@@ -4,7 +4,7 @@ metadata:
   name: chat-service-message-broker-client-config-map
   namespace: peerprep
 data:
-  redis-username: default
+  redis-username: chat-service
   redis-host: redis-12168.c295.ap-southeast-1-1.ec2.cloud.redislabs.com
   redis-port: '12168'
 
