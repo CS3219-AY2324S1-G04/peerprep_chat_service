@@ -4,7 +4,7 @@ Handles the storing retrieving, updating and deleting of questions.
 
 The `docker-compose.yml` file starts 2 Docker containers.
 
-- `chat_service_mq` - NoSQL Database for storing question repository.
+- `chat_service_message_broker` - NoSQL Database for storing question repository.
 - `chat_service_api` - REST API for interacting with the database.
 
 ## Table of Contents

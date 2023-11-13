@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-service-api-deployment
+  namespace: peerprep
+  labels:
+    app: chat-service-api
+spec:
+  selector:
+    matchLabels:
+      app: chat-service-api
+  template:
+    metadata:
+      namespace: peerprep
+      labels:
+        app: chat-service-api
+    spec:
+      containers:
+        - name: chat-service-api
+          image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api
+          ports:
+            - containerPort: 9005
+          env:
+            - name: REDIS_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-message-broker-client-config-map
+                  key: redis-username
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-message-broker-client-secret
+                  key: redis-password
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-message-broker-client-config-map
+                  key: redis-host
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-message-broker-client-config-map
+                  key: redis-port
+            - name: REDIS_SHOULD_USE_TLS
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-message-broker-client-config-map
+                  key: redis-should-use-tls
+            - name: ROOM_SERVICE_MQ_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-user
+            - name: ROOM_SERVICE_MQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-service-room-service-mq-client-secret
+                  key: room-service-mq-password
+            - name: ROOM_SERVICE_MQ_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-host
+            - name: ROOM_SERVICE_MQ_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-port
+            - name: ROOM_SERVICE_MQ_VHOST
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-vhost
+            - name: ROOM_SERVICE_MQ_SHOULD_USE_TLS
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-should-use-tls
+            - name: ROOM_SERVICE_MQ_EXCHANGE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-exchange-name
+            - name: ROOM_SERVICE_MQ_QUEUE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: chat-service-room-service-mq-client-config-map
+                  key: room-service-mq-queue-name
+            - name: API_PORT
+              value: '9005'
+            - name: NODE_ENV
+              value: 'production'
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 256Mi
+              cpu: 500m

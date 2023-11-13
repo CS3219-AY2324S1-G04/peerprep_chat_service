@@ -2,8 +2,8 @@ version: '3.8'
 
 services:
   # Redis - Chat Service
-  chat_service_mq:
-    container_name: chat_service_mq
+  chat_service_message_broker:
+    container_name: chat_service_message_broker
     image: redis:7-bookworm
     networks:
       - peerprep
@@ -22,7 +22,7 @@ services:
     environment:
       REDIS_USERNAME: default
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_HOST: chat_service_mq
+      REDIS_HOST: chat_service_message_broker
       REDIS_PORT: 6379
       REDIS_SHOULD_USE_TLS: false
       ROOM_SERVICE_MQ_USER: ${ROOM_SERVICE_MQ_USER}
@@ -38,7 +38,7 @@ services:
     ports:
       - ${API_EXPOSED_PORT}:9005
     depends_on:
-      - chat_service_mq
+      - chat_service_message_broker
     restart: unless-stopped
 
 networks:
