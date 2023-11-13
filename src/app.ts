@@ -3,25 +3,40 @@
  * @author Irving de Boer
  */
 import { createAdapter } from '@socket.io/redis-streams-adapter';
-import * as dotenv from 'dotenv';
 import express, { Application } from 'express';
 import { createServer } from 'http';
 import { createClient } from 'redis';
 import { Server } from 'socket.io';
 
+import {
+  REDIS_HOST,
+  REDIS_PASSWORD,
+  REDIS_PORT,
+  REDIS_SHOULD_USE_TLS,
+  REDIS_USERNAME,
+  ROOM_SERVICE_MQ_EXCHANGE_NAME,
+  ROOM_SERVICE_MQ_HOST,
+  ROOM_SERVICE_MQ_PASSWORD,
+  ROOM_SERVICE_MQ_PORT,
+  ROOM_SERVICE_MQ_QUEUE_NAME,
+  ROOM_SERVICE_MQ_SHOULD_USE_TLS,
+  ROOM_SERVICE_MQ_USER,
+  ROOM_SERVICE_MQ_VHOST,
+} from './constants/chat.constants';
 import { Room } from './controller/chat.room';
 import { ChatDatabase } from './database/chat.database';
 import { RoomEvent } from './interfaces/chat.interfaces';
 import RoomServiceMqConsumer from './mq/chat.mq';
-
-dotenv.config();
 
 class App {
   public app: Application;
   public server;
   public io;
   private _redisClient = createClient({
-    url: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_DOCKER_PORT}`,
+    url: `redis://${encodeURIComponent(REDIS_USERNAME)}:${encodeURIComponent(
+      REDIS_PASSWORD,
+    )}@${REDIS_HOST}:${REDIS_PORT}`,
+    socket: { tls: REDIS_SHOULD_USE_TLS },
   });
   private _redisDatabase;
 
@@ -57,14 +72,14 @@ class App {
 
   private async _consumeMessages() {
     const consumer: RoomServiceMqConsumer = new RoomServiceMqConsumer({
-      exchangeName: process.env.MQ_EXCHANGE_NAME!,
-      host: process.env.MQ_HOST!,
-      password: process.env.MQ_PASSWORD!,
-      port: Number(process.env.MQ_PORT!),
-      queueName: 'chat-service-room-event-queue',
-      shouldUseTls: false,
-      user: process.env.MQ_USER!,
-      vhost: process.env.MQ_VHOST!,
+      user: ROOM_SERVICE_MQ_USER,
+      password: ROOM_SERVICE_MQ_PASSWORD,
+      host: ROOM_SERVICE_MQ_HOST,
+      port: Number(ROOM_SERVICE_MQ_PORT),
+      vhost: ROOM_SERVICE_MQ_VHOST,
+      shouldUseTls: ROOM_SERVICE_MQ_SHOULD_USE_TLS,
+      exchangeName: ROOM_SERVICE_MQ_EXCHANGE_NAME,
+      queueName: ROOM_SERVICE_MQ_QUEUE_NAME,
     });
 
     await consumer.initialise();

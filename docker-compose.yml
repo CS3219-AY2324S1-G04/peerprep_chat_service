@@ -1,36 +1,47 @@
 version: '3.8'
 
 services:
+  # Redis - Chat Service
+  chat_service_mq:
+    container_name: chat_service_mq
+    image: redis:7-bookworm
+    networks:
+      - peerprep
+    command: /bin/sh -c "redis-server --requirepass $${REDIS_PASSWORD}"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    restart: unless-stopped
+
   # Server - Chat Service
   chat_service_api:
     container_name: chat_service_api
-    image: peerprep_chat_service_api
-    build: ./server
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      # local->container
-      - ${EXPRESS_LOCAL_PORT}:${EXPRESS_DOCKER_PORT}
-    depends_on:
-        - chat_service_redis
-    networks:
-        - peerprep
-# Redis - Chat Service
-  chat_service_redis:
-    container_name: chat_service_redis
-    image: redis:latest
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-      - ${REDIS_LOCAL_PORT}:${REDIS_DOCKER_PORT}
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api
+    build: .
     networks:
       - peerprep
+    environment:
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_HOST: chat_service_mq
+      REDIS_PORT: 6379
+      REDIS_SHOULD_USE_TLS: false
+      ROOM_SERVICE_MQ_USER: ${ROOM_SERVICE_MQ_USER}
+      ROOM_SERVICE_MQ_PASSWORD: ${ROOM_SERVICE_MQ_PASSWORD}
+      ROOM_SERVICE_MQ_HOST: ${ROOM_SERVICE_MQ_HOST}
+      ROOM_SERVICE_MQ_PORT: ${ROOM_SERVICE_MQ_PORT}
+      ROOM_SERVICE_MQ_VHOST: ${ROOM_SERVICE_MQ_VHOST}
+      ROOM_SERVICE_MQ_SHOULD_USE_TLS: ${ROOM_SERVICE_MQ_SHOULD_USE_TLS}
+      ROOM_SERVICE_MQ_EXCHANGE_NAME: ${ROOM_SERVICE_MQ_EXCHANGE_NAME}
+      ROOM_SERVICE_MQ_QUEUE_NAME: ${ROOM_SERVICE_MQ_QUEUE_NAME}
+      API_PORT: 9005
+      NODE_ENV: ${NODE_ENV}
+    ports:
+      - ${API_EXPOSED_PORT}:9005
+    depends_on:
+      - chat_service_mq
+    restart: unless-stopped
 
 networks:
-    peerprep:
-        external: true
-
-
-
+  peerprep:
+    name: peerprep
+    external: true
