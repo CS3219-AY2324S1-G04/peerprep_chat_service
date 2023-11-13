@@ -29,7 +29,7 @@ The `docker-compose.yml` file starts 2 Docker containers.
 
 ## Architecture
 
-![](./images/architecture.jpg)
+![](./images/architecture-1.jpg)
 
 ## Environment Variables
 
