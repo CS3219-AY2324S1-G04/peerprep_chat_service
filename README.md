@@ -39,7 +39,7 @@ Legend:
 **API Server**
 
 - Handles sending and receiving chat messages via WebSockets.
-  - Note that since we are using Socket.io, should WebSocket connection fail, it will automatically fallback to long polling.
+  - Note that since we are using Socket.io, should WebSocket connection fail, it will automatically fall back to long polling.
 - Updates room information in the Message Broker when events are received from the Room Service MQ.
 - Publishes chat messages to the Message Broker when chat messages are sent by a client/server.
 - Sends chat messages to the appropriate client/server when chat messages are received from the Message Broker.
@@ -141,6 +141,7 @@ using the following code:
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:9005", {
+  path: "/chat-service/socket.io",  
   query: {
     roomId: "room-id",
     userId: "user-id",
