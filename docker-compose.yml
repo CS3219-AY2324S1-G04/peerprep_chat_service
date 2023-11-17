@@ -15,7 +15,7 @@ services:
   # Server - Chat Service
   chat_service_api:
     container_name: chat_service_api
-    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api
+    image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api:demo
     build: .
     networks:
       - peerprep
