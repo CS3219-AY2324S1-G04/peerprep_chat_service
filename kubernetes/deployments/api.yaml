@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: chat-service-api
-          image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api
+          image: ghcr.io/cs3219-ay2324s1-g04/peerprep_chat_service_api:demo
           ports:
             - containerPort: 9005
           env:
